@@ -11,6 +11,14 @@ use Inertia\Inertia;
 
 Route::redirect('/', '/dashboard');
 
+// ✅ Health check route (no auth middleware)
+Route::get('/health/check', function () {
+    return response()->json([
+        'status' => 'ok',
+        'port'   => 80
+    ], 200);
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
