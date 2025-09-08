@@ -1,5 +1,7 @@
 #!/bin/bash
 
+yum install amazon-cloudwatch-agent -y
+
 yum install -y \
   php-bcmath \
   php-calendar \
