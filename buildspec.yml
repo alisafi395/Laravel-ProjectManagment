@@ -6,9 +6,11 @@ phases:
       php: 8.3
       nodejs: 18
     commands:
-      - echo "🔧 Installing system dependencies..."
-      - yum update -y
-      - yum install -y unzip curl git php-mbstring php-xml php-bcmath php-curl php-mysqlnd zip
+      - echo "🔧 Using Amazon Linux 2 standard image"
+      - php -v
+      - node -v
+      - npm -v
+      - echo "📦 Installing Composer globally"
       - curl -sS https://getcomposer.org/installer | php
       - mv composer.phar /usr/local/bin/composer
 
@@ -19,7 +21,7 @@ phases:
       - cp .env.example .env || true
       - php artisan config:cache
       - echo "📦 Installing Node dependencies..."
-      - npm install
+      - npm ci || npm install
 
   build:
     commands:
