@@ -7,8 +7,8 @@ phases:
       nodejs: 18
     commands:
       - echo "🔧 Installing system dependencies..."
-      - apt-get update
-      - apt-get install -y unzip curl git php-mbstring php-xml php-bcmath php-curl php-mysql zip
+      - yum update -y
+      - yum install -y unzip curl git php-mbstring php-xml php-bcmath php-curl php-mysqlnd zip
       - curl -sS https://getcomposer.org/installer | php
       - mv composer.phar /usr/local/bin/composer
 
