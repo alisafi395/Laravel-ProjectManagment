@@ -1,0 +1,36 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      php: 8.3
+      nodejs: 18
+    commands:
+      - echo "🔧 Installing system dependencies..."
+      - apt-get update
+      - apt-get install -y unzip curl git php-mbstring php-xml php-bcmath php-curl php-mysql zip
+      - curl -sS https://getcomposer.org/installer | php
+      - mv composer.phar /usr/local/bin/composer
+
+  pre_build:
+    commands:
+      - echo "📦 Installing PHP dependencies..."
+      - composer install --no-dev --optimize-autoloader
+      - cp .env.example .env || true
+      - php artisan config:cache
+      - echo "📦 Installing Node dependencies..."
+      - npm install
+
+  build:
+    commands:
+      - echo "🚀 Building frontend with Vite..."
+      - npm run build --verbose
+
+  post_build:
+    commands:
+      - echo "✅ Build completed successfully!"
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: .

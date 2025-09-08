@@ -1,0 +1,21 @@
+# build on server
+node_modules/
+vendor/
+
+# local env & IDE
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+.DS_Store
+
+# caches/logs
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# tests
+tests/
+coverage/
