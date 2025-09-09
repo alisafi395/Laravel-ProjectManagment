@@ -1,56 +1,33 @@
 #!/bin/bash
+set -euo pipefail
 
-yum install amazon-cloudwatch-agent -y
+echo "🔧 Installing PHP/system deps (skipping anything not in repos)..."
 
-yum install -y \
-  php-bcmath \
-  php-calendar \
-  php-ctype \
-  php-curl \
-  php-dom \
-  php-exif \
-  php-ffi \
-  php-fileinfo \
-  php-filter \
-  php-ftp \
-  php-gettext \
-  php-hash \
-  php-iconv \
-  php-intl \
-  php-json \
-  php-libxml \
-  php-mbstring \
-  php-mysqli \
-  php-mysqlnd \
-  php-openssl \
-  php-pcntl \
-  php-pcre \
-  php-pdo \
-  php-pdo_mysql \
-  php-pdo_sqlite \
-  php-phar \
-  php-posix \
-  php-random \
-  php-readline \
-  php-reflection \
-  php-session \
-  php-shmop \
-  php-simplexml \
-  php-sockets \
-  php-sodium \
-  php-spl \
-  php-sqlite3 \
-  php-standard \
-  php-sysvmsg \
-  php-sysvsem \
-  php-sysvshm \
-  php-tokenizer \
-  php-xml \
-  php-xmlreader \
-  php-xmlwriter \
-  php-xsl \
-  php-opcache \
-  php-zip \
-  php-zlib
+# Minimal, commonly-needed extensions for Laravel on EB PHP 8.x
+PKGS=(
+  php-mbstring
+  php-xml
+  php-bcmath
+  php-curl
+  php-mysqlnd
+  php-intl
+  php-zip
+  unzip
+  git
+  curl
+)
 
+# Install each package only if available, never fail the deploy for a miss
+for pkg in "${PKGS[@]}"; do
+  if yum list -q available "$pkg" >/dev/null 2>&1; then
+    echo "➡️  Installing $pkg"
+    yum install -y "$pkg"
+  else
+    echo "⚠️  $pkg not found in repos; skipping"
+  fi
+done
 
+echo "🔑 Fixing Laravel permissions..."
+chmod -R 775 /var/app/current/storage /var/app/current/bootstrap/cache || true
+chown -R webapp:webapp /var/app/current/storage /var/app/current/bootstrap/cache || true
+echo "✅ Predeploy complete."
