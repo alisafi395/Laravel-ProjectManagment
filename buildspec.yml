@@ -35,4 +35,6 @@ phases:
 artifacts:
   files:
     - '**/*'
+    - '.platform/**/*'
   base-directory: .
+
